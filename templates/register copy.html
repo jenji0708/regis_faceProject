@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: #7d2923;
+        }
+
+        .form-group {
+            float: right;
+            color: white;
+        }
+
+        /* ขยายขนาด checkbox */
+        #showPassword {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+        }
+
+        /* จัดวางข้อความ "Show Password" */
+        .checkbox-label {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-11">
+                <div class="custom-container2">
+                    <div class="header">
+                        <img src="/static/image/logo-mfu-v22.png" alt="logo-mfu" class="logo">
+                        <h2 style="color: white; text-align: center;">Register for Graduation</h2>
+                    </div>
+                    <form id="registerForm" action="/register1" method="POST">
+                        <input type="text" name="studentID" placeholder="Student ID" required>
+                        <input type="email" name="email" placeholder="Email" required>
+                        <input type="password" name="password" id="password" placeholder="Password" required
+                            minlength="8">
+                        <input type="password" name="confirmPassword" id="confirmPassword"
+                            placeholder="Confirm Password" required>
+
+                        <!-- Checkbox สำหรับการโชว์/ซ่อนรหัสผ่าน -->
+                        <div class="form-group mb-3">
+                            <input type="checkbox" id="showPassword">
+                            <label for="showPassword" class="checkbox-label">Show Password</label>
+                        </div>
+
+                        <button type="submit">Register</button>
+                    </form>
+
+                </div>
+                {% if message %}
+                <div class="alert alert-danger">{{ message }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // การสลับโชว์/ซ่อนรหัสผ่าน
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const showPasswordCheckbox = document.getElementById('showPassword');
+
+        showPasswordCheckbox.addEventListener('change', function () {
+            if (showPasswordCheckbox.checked) {
+                passwordInput.type = 'text';  // โชว์รหัสผ่าน
+                confirmPasswordInput.type = 'text';  // โชว์ยืนยันรหัสผ่าน
+            } else {
+                passwordInput.type = 'password';  // ซ่อนรหัสผ่าน
+                confirmPasswordInput.type = 'password';  // ซ่อนยืนยันรหัสผ่าน
+            }
+        });
+    </script>
+    <!-- Modal for messages -->
+    <!-- <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="messageModalLabel">Message</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modalMessage"> -->
+    <!-- Message will be inserted here -->
+    <!-- </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    <!-- <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-11">
+                <div class="custom-container2">
+                    <div class="header">
+                        <img src="/image/logo-mfu-v22.png" alt="logo-mfu" class="logo">
+                        <h2 style="color: white; text-align: center;">Register for Graduation</h2>
+                    </div>
+                    <form id="registerForm" method="POST">
+                        <input type="text" class="form-control" placeholder="Student ID" aria-label="StudentID" name="studentID" id="studentID" required>
+                        <input type="email" class="form-control" placeholder="Email" aria-label="Email" name="email" id="email" required>
+                        <input type="password" class="form-control" placeholder="Password" aria-label="Password" name="password" id="password" required>
+                        <input type="password" class="form-control" placeholder="Confirm Password" aria-label="ConfirmPassword" name="confirmPassword" id="confirmPassword" required>
+                        <button type="submit" class="btn btn-success">Register</button>
+                        <div class="mt-1">
+                            <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">Back to Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Modal for messages -->
+    <!-- <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="messageModalLabel">Message</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalMessage"> -->
+    <!-- Message will be inserted here -->
+    <!-- </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- <script>
+        document.getElementById('registerForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const studentID = document.getElementById('studentID').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // ตรวจสอบ Student ID ให้เป็นตัวเลข 10 ตัว
+            const studentIDPattern = /^\d{10}$/;
+            if (!studentIDPattern.test(studentID)) {
+                document.getElementById('modalMessage').textContent = 'Student ID must be 10 digits.';
+                const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+                messageModal.show();
+                return;
+            }
+
+            // ตรวจสอบรูปแบบ Email
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            if (!emailPattern.test(email)) {
+                document.getElementById('modalMessage').textContent = 'Please enter a valid email address.';
+                const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+                messageModal.show();
+                return;
+            }
+
+            // ตรวจสอบความยาวของรหัสผ่าน
+            if (password.length < 8) {
+                document.getElementById('modalMessage').textContent = 'Password must be at least 8 characters long.';
+                const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+                messageModal.show();
+                return;
+            }
+
+            // ตรวจสอบว่ารหัสผ่านและยืนยันรหัสผ่านตรงกัน
+            if (password !== confirmPassword) {
+                document.getElementById('modalMessage').textContent = 'Passwords do not match.';
+                const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+                messageModal.show();
+                return;
+            }
+
+            try {
+                // ส่งข้อมูลไปยังเซิร์ฟเวอร์
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ studentID, email, password, confirmPassword })
+                });
+
+                const data = await response.json();
+
+                document.getElementById('modalMessage').textContent = data.message;
+                const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+                messageModal.show();
+
+                if (response.status === 201) {
+                    // Redirect to login after a short delay
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                }
+            } catch (error) {
+                document.getElementById('modalMessage').textContent = 'An error occurred. Please try again.';
+                const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+                messageModal.show();
+            }
+        });
+        // document.getElementById('registerForm').addEventListener('submit', async function (event) {
+        //     event.preventDefault();
+
+        //     const studentID = document.getElementById('studentID').value;
+        //     const email = document.getElementById('email').value;
+        //     const password = document.getElementById('password').value;
+        //     const confirmPassword = document.getElementById('confirmPassword').value;
+
+        //     try {
+        //         const response = await fetch('/auth/register', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //             },
+        //             body: JSON.stringify({ studentID, email, password, confirmPassword })
+        //         });
+
+        //         const data = await response.json();
+
+        //         document.getElementById('modalMessage').textContent = data.message;
+        //         const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+        //         messageModal.show();
+
+        //         if (response.status === 201) {
+        // Redirect to login after a short delay
+        //             setTimeout(() => {
+        //                 window.location.href = '/';
+        //             }, 2000);
+        //         }
+        //     } catch (error) {
+        //         document.getElementById('modalMessage').textContent = 'An error occurred. Please try again.';
+        //         const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+        //         messageModal.show();
+        //     }
+        // });
+    </script> -->
+</body>
+
+</html>

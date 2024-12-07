@@ -1,0 +1,5 @@
+<form action="/edit/{{ user['student_id'] }}" method="POST"></form>
+    <input type="text" name="name" value="{{ user['name'] }}" required>
+    <input type="text" name="surname" value="{{ user['surname'] }}" required>
+    <button type="submit">Update</button>
+</form>

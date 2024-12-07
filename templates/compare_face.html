@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Verification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #343a40;
+        }
+
+        #camera-container {
+            position: relative;
+        }
+
+        #video {
+            border: 2px solid #ced4da;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #progress-bar {
+            display: none;
+        }
+
+        .btn-primary {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container text-center mt-5 shadow p-4 bg-white rounded">
+        <h2>Face Verification</h2>
+        <div id="camera-container">
+            <video id="video" width="640" height="480" autoplay></video>
+            <canvas id="canvas" style="display:none;"></canvas>
+            <button id="snap" class="btn btn-primary mt-3">Capture Face</button>
+            <div id="progress-bar" class="progress mt-3" style="height: 25px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                    style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Success/Failure -->
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultModalLabel">Face Verification</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalMessage">
+                    <!-- Message will be injected here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const snap = document.getElementById('snap');
+        const context = canvas.getContext('2d');
+        const progressBar = document.getElementById('progress-bar');
+        const modal = new bootstrap.Modal(document.getElementById('resultModal'));
+        const modalMessage = document.getElementById('modalMessage');
+
+        // Access camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                video.srcObject = stream;
+                video.play();
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+            })
+            .catch(function (err) {
+                console.error("Camera access error: " + err);
+                alert("Unable to access camera. Please check permissions.");
+            });
+
+        snap.addEventListener("click", function () {
+            // Show progress bar
+            progressBar.style.display = 'block';
+
+            // Capture video frame
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageDataUrl = canvas.toDataURL('image/jpeg');
+
+            // Send image to server
+            fetch("{{ url_for('compare_face') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `image=${encodeURIComponent(imageDataUrl)}`
+            })
+            .then(response => {
+                progressBar.style.display = 'none';
+                if (!response.ok) {
+                    throw new Error('Face verification failed');
+                }
+                return response.json();
+            })
+            .then(data => {
+                modalMessage.textContent = data.message;
+                modal.show();
+                if (data.message.includes('Matched') || data.message.includes('successful')) {
+                    setTimeout(() => {
+                        window.location.href = "{{ url_for('home') }}";
+                    }, 2000); // Redirect after 2 seconds
+                }
+            })
+            .catch(error => {
+                progressBar.style.display = 'none';
+                modalMessage.textContent = 'Face verification failed. Please try again.';
+                modal.show();
+                console.error('Verification Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: #7d2923;
+        }
+
+        /* ขยายขนาด checkbox */
+        #showPassword {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+        }
+
+        .form-group {
+            float: right;
+            color: white;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-11">
+                <div class="custom-container2">
+                    <div class="header">
+                        <img src="/static/image/logo-mfu-v22.png" alt="logo-mfu" class="logo">
+                        <h2 style="color: white; text-align: center;">Login</h2>
+                    </div>
+                    <form id="loginForm" method="POST" action="/login1">
+                        <input type="text" name="studentID" id="studentID" placeholder="Student ID" required>
+                        <input type="password" name="password" id="password" placeholder="Password" required>
+
+                        <div class="form-group mb-3">
+                            <input type="checkbox" id="showPassword">
+                            <label for="showPassword" class="checkbox-label">Show Password</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">Login</button>
+                    </form>
+
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-secondary" onclick="window.location.href='/register'">Sign up</button>
+                    </div>
+                </div>
+                  <!-- แสดงข้อความแจ้งเตือนในกรณีเกิดข้อผิดพลาด -->
+                    {% if message %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const passwordInput = document.getElementById('password');
+        const showPasswordCheckbox = document.getElementById('showPassword');
+
+        showPasswordCheckbox.addEventListener('change', function () {
+            if (showPasswordCheckbox.checked) {
+                passwordInput.type = 'text';  // โชว์รหัสผ่าน
+            } else {
+                passwordInput.type = 'password';  // ซ่อนรหัสผ่าน
+            }
+        });
+    </script>
+</body>
+
+</html>

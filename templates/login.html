@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #2575fc, #6a11cb);
+            color: #fff;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary {
+            background-color: #2575fc;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #6a11cb;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="form-container col-md-6">
+            <h2 class="text-center mb-4">Login</h2>
+            <form id="loginForm" method="POST">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+            <p class="text-center mt-3">
+                Forgot password? <a href="/reset-password" class="text-light">Reset Here</a><br>
+                Don't have an account? <a href="/register" class="text-light">Register</a>
+            </p>
+        </div> 
+    </div>
+    <div class="container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-3">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <script>
+        const form = document.getElementById('loginForm');
+        form.addEventListener('submit', (event) => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+    
+            if (!email || !password) {
+                alert("Please fill out all fields!");
+                event.preventDefault();
+            }
+        });
+    </script>    
+
+</body>
+
+</html>

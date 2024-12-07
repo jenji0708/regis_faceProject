@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบลงทะเบียนและตรวจสอบใบหน้า</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/face-api.js/0.22.2/face-api.min.js"></script>
+    <style>
+        #videoElement {
+            width: 400px;
+            height: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <video id="videoElement" autoplay></video>
+    <button id="captureButton">Capture Photo</button>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <div id="result"></div>
+
+    <script>
+        let video = document.getElementById('videoElement');
+        let canvas = document.getElementById('canvas');
+        let captureButton = document.getElementById('captureButton');
+        let resultDiv = document.getElementById('result');
+
+        // เริ่มการทำงานของกล้อง
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                video.srcObject = stream;
+            })
+            .catch(function (err) {
+                console.log("เกิดข้อผิดพลาด: " + err);
+            });
+
+        // โหลดโมเดลสำหรับการตรวจจับใบหน้า
+        Promise.all([
+            faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
+            faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+            faceapi.nets.faceRecognitionNet.loadFromUri('/models')
+        ]).then(startVideo);
+
+        function startVideo() {
+            console.log('โมเดลถูกโหลดเรียบร้อยแล้ว');
+        }
+
+        captureButton.addEventListener('click', async () => {
+            // จับภาพจากวิดีโอ
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            let image = canvas.toDataURL('image/jpeg');
+
+            // ตรวจจับใบหน้า
+            const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
+
+            if (detection) {
+                // ส่งข้อมูลไปยัง server
+                fetch('/register1', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ image: image }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            resultDiv.innerHTML = 'ลงทะเบียนสำเร็จ!';
+                        } else {
+                            resultDiv.innerHTML = 'ลงทะเบียนไม่สำเร็จ โปรดลองอีกครั้ง';
+                        }
+                    });
+            } else {
+                resultDiv.innerHTML = 'ไม่พบใบหน้า โปรดลองอีกครั้ง';
+            }
+        });
+    </script>
+</body>
+
+</html>

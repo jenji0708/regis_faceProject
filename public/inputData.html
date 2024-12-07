@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration</title>
+</head>
+<body>
+  <h1>Student Registration Form</h1>
+  <form id="studentForm" action="/registerForm" method="POST" enctype="multipart/form-data">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" required><br><br>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" required><br><br>
+
+    <label for="studentID">Student ID:</label>
+    <input type="text" id="studentID" name="studentID" required><br><br>
+
+    <label for="face">Upload Face Image:</label>
+    <input type="file" id="face" name="face" accept="image/*" required><br><br>
+
+    <button type="submit">Register</button>
+  </form>
+</body>
+</html>

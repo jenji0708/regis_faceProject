@@ -1,0 +1,47 @@
+/* Ensures content is not hidden under the navbar */
+body {
+    padding-top: 80px; /* Adjusted for space above the navigation */
+}
+
+.navbar-custom {
+    background-color: #7d2923;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-custom .navbar-brand {
+    color: #fff;
+}
+
+.navbar-custom .navbar-nav .nav-link {
+    color: #fff;
+}
+
+.navbar-custom .navbar-nav .nav-link:hover {
+    color: #f0f0f0;
+}
+
+.navbar-text-container {
+    margin: 0 15px;
+}
+
+.navbar-text {
+    color: #fff;
+    font-size: 18px;
+    line-height: 50px; /* Align with the height of the navbar */
+    text-align: center;
+}
+
+.header {
+    padding: 20px 0;
+}
+
+.content {
+    background-color: #f8f9fa;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-custom {
+    font-size: 16px;
+}
